@@ -120,6 +120,28 @@ public class CPU {
 
     }
 
+    //a function for determine end time in each core
+    public int Endtime(int core){
+        for (int i = deadline-1; i >= 0; i--) {
+            if(this.getRunningTask(core,i)!=null){
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public int getSlack(int core){
+        return (deadline-Endtime(core));
+    }
+
+    public int getSmallestSlack(){
+        int temp=deadline;
+        for (int i = 0; i < n_Cores; i++) {
+            if(getSlack(i)<temp) temp=getSlack(i);
+        }
+        return temp;
+    }
+
     public task getTaskbyName(String name) {
         Iterator<task> it = t.iterator();
         while (it.hasNext()) {
