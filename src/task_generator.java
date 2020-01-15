@@ -22,7 +22,7 @@ public class task_generator {
     private int deadline;
     private int number_of_tasks;
     private int n_core;
-    private List<task> t;
+    private Set<task> t;
     private String[] benchmark;
     private int[] benchmark_time;
 
@@ -32,7 +32,7 @@ public class task_generator {
         this.n_core = n_core;
         this.benchmark = benchmark;
         this.benchmark_time = benchmark_time;
-        t = new ArrayList<task>();
+        t = new HashSet<task>();
 
     }
 
@@ -90,11 +90,11 @@ public class task_generator {
         this.n_core = n_core;
     }
 
-    public List<task> getT() {
+    public Set<task> getT() {
         return t;
     }
 
-    public void setT(List<task> t) {
+    public void setT(Set<task> t) {
         this.t = t;
     }
 }
