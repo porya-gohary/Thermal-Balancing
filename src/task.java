@@ -48,4 +48,12 @@ public class task implements Serializable {
     public void setRuntime(int runtime) {
         this.runtime = runtime;
     }
+
+    public int compareTo(task obj)
+    {
+        // compareTo returns a negative number if this is less than obj,
+        // a positive number if this is greater than obj,
+        // and 0 if they are equal.
+        return this.getRuntime() - obj.getRuntime();
+    }
 }

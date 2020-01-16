@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
@@ -32,7 +29,7 @@ public class CPU {
     //Number of Core in CPU
     private int n_Cores;
     //Idle Power
-    double idle_power = 5.0;
+    double idle_power = 3.0;
 
     private Set<task> t;
 
@@ -150,6 +147,36 @@ public class CPU {
                 return n;
         }
         return null;
+    }
+
+    //Write Scheduling In File for Debugging
+    public void debug(String Filename) throws IOException {
+        BufferedWriter outputWriter = null;
+        outputWriter = new BufferedWriter(new FileWriter(Filename+".csv"));
+        for (int i = 0; i < getN_Cores(); i++) {
+            for (int j = 0; j < getDeadline(); j++) {
+                outputWriter.write(core[i][j]+",");
+            };
+            outputWriter.write("\n");
+        }
+        outputWriter.flush();
+        outputWriter.close();
+    }
+
+    public void setN_Cores(int n_Cores) {
+        this.n_Cores = n_Cores;
+    }
+
+    public void setDeadline(int deadline) {
+        this.deadline = deadline;
+    }
+
+    public int getN_Cores() {
+        return n_Cores;
+    }
+
+    public int getDeadline() {
+        return deadline;
     }
 
 

@@ -12,8 +12,8 @@ public class main {
         double utilization= 3.8;
         //power trace path
         String path="Tasks\\";
-        String benchmark[] = {"Basicmath", "Bitcount", "Dijkstra", "FFT", "JPEG", "Patricia", "Qsort", "Sha", "Stringsearch", "Susan"};
-        int benchmark_time[] = {156, 25, 33, 160, 28, 87, 25, 13, 8, 20};
+        String benchmark[] = {"blackscholes","bodytrack","dedup1","dedup2","ferret1","ferret2","fluidanimate","x264","vips1","vips2"};
+        int benchmark_time[] = {909, 591, 249, 875, 378, 270, 450, 510, 750, 596};
 
         task_generator task_generator=new task_generator(utilization,number_of_tasks,n_core,benchmark,benchmark_time);
         task_generator.generate();
