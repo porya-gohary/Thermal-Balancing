@@ -139,6 +139,14 @@ public class CPU {
         return temp;
     }
 
+    public int getEndApplication(){
+        int temp = 0;
+        for (int i = 0; i < n_Cores; i++) {
+           if(Endtime(i)>temp)temp=Endtime(i);
+        }
+        return temp;
+    }
+
     public task getTaskbyName(String name) {
         Iterator<task> it = t.iterator();
         while (it.hasNext()) {
@@ -162,6 +170,16 @@ public class CPU {
         }
         outputWriter.flush();
         outputWriter.close();
+    }
+
+    public void insert_checkpoint(int overhead, int start) throws Exception {
+        Task_Shifter(start, overhead);
+        for (int j = 0; j < n_Cores; j++) {
+            for (int i = start; i < start + overhead; i++) {
+                core[j][i]="CHK";
+                power[j][i]=idle_power;
+            }
+        }
     }
 
     public void Task_Shifter(int shiftTime, int amount) throws Exception {
@@ -232,35 +250,35 @@ public class CPU {
 
     //Calculate Average Power Consumption of CPU in a Specific Interval
     public double[] averagePowerInInterval(int start, int end) {
-        double [] p=new double[n_Cores];
-        for (int i = 0; i <n_Cores; i++) {
+        double[] p = new double[n_Cores];
+        for (int i = 0; i < n_Cores; i++) {
             for (int j = start; j <= end; j++) {
-                p[i]+=power[i][j];
+                p[i] += power[i][j];
             }
-            p[i]/=deadline;
+            p[i] /= deadline;
 
         }
         return p;
     }
 
     //A Simple Function for Swap tasks in a specific interval
-    public void taskSwap(int core1,int core2,int start,int end){
-        double[] p=new double[start-end];
-        String[] s=new String[start-end];
+    public void taskSwap(int core1, int core2, int start, int end) {
+        double[] p = new double[start - end];
+        String[] s = new String[start - end];
 
-        int temp=0;
-        for (int i = start; i <=end ; i++) {
-            p[temp]=power[core1][i];
-            s[temp]=core[core1][i];
+        int temp = 0;
+        for (int i = start; i <= end; i++) {
+            p[temp] = power[core1][i];
+            s[temp] = core[core1][i];
             temp++;
         }
-        temp=0;
-        for (int i = start; i <=end ; i++) {
-            power[core1][i]=power[core2][i];
-            core[core1][i]=core[core2][i];
+        temp = 0;
+        for (int i = start; i <= end; i++) {
+            power[core1][i] = power[core2][i];
+            core[core1][i] = core[core2][i];
 
-            power[core2][i]=p[temp];
-            core[core2][i]=s[temp];
+            power[core2][i] = p[temp];
+            core[core2][i] = s[temp];
             temp++;
         }
     }
