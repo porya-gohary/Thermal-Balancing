@@ -30,6 +30,7 @@ public class Checkpoint_interval {
     }
 
     public int getInterval(){
+        System.out.println("[DEBUG]  Smallest Slack Time= "+cpu.getSmallestSlack());
         return ((cpu.getSmallestSlack()-(number_of_fault*overhead))/number_of_fault);
     }
 }

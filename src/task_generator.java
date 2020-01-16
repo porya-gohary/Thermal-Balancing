@@ -25,13 +25,18 @@ public class task_generator {
     private Set<task> t;
     private String[] benchmark;
     private int[] benchmark_time;
+    private int tolerable_fault=2;
+    private int overhead;
 
-    public task_generator(double utilization, int number_of_tasks, int n_core, String[] benchmark, int[] benchmark_time) {
+    public task_generator(double utilization, int number_of_tasks, int n_core, String[] benchmark, int[] benchmark_time,
+                    int tolerable_fault,int overhead) {
         this.utilization = utilization;
         this.number_of_tasks = number_of_tasks;
         this.n_core = n_core;
         this.benchmark = benchmark;
         this.benchmark_time = benchmark_time;
+        this.tolerable_fault=tolerable_fault;
+        this.overhead=overhead;
         t = new HashSet<task>();
 
     }
@@ -52,10 +57,18 @@ public class task_generator {
         for (task a: t) {
             total_exec_time+=a.getRuntime();
         }
-        deadline=(int)((double)total_exec_time/(utilization/n_core));
+        deadline=(int)(((double)total_exec_time/(utilization))+(tolerable_fault*overhead));
         System.out.println("Deadline= "+deadline);
         System.out.println("Total Exec. Time="+ total_exec_time);
 
+    }
+
+    public int getNewDedaline(CPU cpu){
+        int[] temp=new int[cpu.getN_Cores()];
+        for (int i = 0; i < n_core; i++) {
+            temp[i]=cpu.Endtime(i);
+        }
+        return 0;
     }
 
     public double getUtilization() {

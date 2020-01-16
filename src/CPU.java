@@ -70,7 +70,7 @@ public class CPU {
 
     //Set Task to Core
     public void SetTaskOnCore(String Task, int Core, int Start, int End) throws Exception {
-        // System.out.println(Task+"  "+ Start+"  "+End);
+         System.out.println(Task+"  "+ Start+"  "+End+"   Core: "+Core);
         try {
             for (int i = Start; i <= End; i++) {
                 core[Core][i] = Task;
@@ -263,17 +263,18 @@ public class CPU {
 
     //A Simple Function for Swap tasks in a specific interval
     public void taskSwap(int core1, int core2, int start, int end) {
-        double[] p = new double[start - end];
-        String[] s = new String[start - end];
+        System.out.println("[DEBUG]   "+start+"   "+end);
+        double[] p = new double[end - start];
+        String[] s = new String[end - start];
 
         int temp = 0;
-        for (int i = start; i <= end; i++) {
+        for (int i = start; i < end; i++) {
             p[temp] = power[core1][i];
             s[temp] = core[core1][i];
             temp++;
         }
         temp = 0;
-        for (int i = start; i <= end; i++) {
+        for (int i = start; i < end; i++) {
             power[core1][i] = power[core2][i];
             core[core1][i] = core[core2][i];
 
@@ -281,6 +282,7 @@ public class CPU {
             core[core2][i] = s[temp];
             temp++;
         }
+        System.out.println("Time: "+ start +"  Core1=> "+core1+" Core2=> "+core2);
     }
 
     public void setN_Cores(int n_Cores) {
