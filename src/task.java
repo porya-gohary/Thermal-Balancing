@@ -16,7 +16,7 @@ import java.io.Serializable;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-public class task implements Serializable {
+public class task implements Comparable<task>, Serializable {
     String name;
     String benchmark;
     int runtime;

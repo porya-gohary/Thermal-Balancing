@@ -51,7 +51,7 @@ public class Scheduling {
         }
         Checkpoint_interval checkpoint_interval=new Checkpoint_interval(cpu,tolerable_fault,overhead,t);
         interval=checkpoint_interval.getInterval();
-
+        cpu.debug("Sch1");
 
 
     }
@@ -62,10 +62,10 @@ public class Scheduling {
     }
 
     public int worseFitCoreSelector(){
-        int temp=0;
+        int temp=deadline;
         int core=0;
         for (int i = 0; i < n_Cores; i++) {
-            if(temp<cpu.Endtime(i)) {
+            if(temp>cpu.Endtime(i)) {
                 temp = cpu.Endtime(i);
                 core = i;
             }
