@@ -10,13 +10,21 @@ public class Scheduling {
     private task t[];
     //CPU
     CPU cpu;
+    //Checkpoint Interval
+    int interval;
+    //Number of tolerable fault
+    int tolerable_fault;
+    //Checkpoint overhead
+    int overhead;
 
 
-    public Scheduling(int deadline, int n_Cores, task [] t, CPU cpu) {
+    public Scheduling(int deadline, int n_Cores, task [] t, CPU cpu, int tolerable_fault,int overhead) {
         this.deadline = deadline;
         this.n_Cores = n_Cores;
         this.t = t;
         this.cpu = cpu;
+        this.tolerable_fault=tolerable_fault;
+        this.overhead=overhead;
     }
 
     public void schedule() throws Exception {
@@ -25,6 +33,8 @@ public class Scheduling {
             cpu.SetTaskOnCore(task.name,worseFitCoreSelector(),cpu.Endtime(worseFitCoreSelector()),
                     cpu.Endtime(worseFitCoreSelector())+task.runtime);
         }
+        Checkpoint_interval checkpoint_interval=new Checkpoint_interval(cpu,tolerable_fault,overhead,t);
+        interval=checkpoint_interval.getInterval();
 
     }
 

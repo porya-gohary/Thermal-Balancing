@@ -20,9 +20,9 @@ public class Checkpoint_interval {
     CPU cpu;
     private int number_of_fault;
     private int overhead;
-    private Set<task> t;
+    private task[] t;
 
-    public Checkpoint_interval(CPU cpu, int number_of_fault, int overhead, Set<task> t) {
+    public Checkpoint_interval(CPU cpu, int number_of_fault, int overhead, task[] t) {
         this.cpu = cpu;
         this.number_of_fault = number_of_fault;
         this.overhead = overhead;

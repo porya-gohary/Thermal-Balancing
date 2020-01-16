@@ -118,23 +118,23 @@ public class CPU {
     }
 
     //a function for determine end time in each core
-    public int Endtime(int core){
-        for (int i = deadline-1; i >= 0; i--) {
-            if(this.getRunningTask(core,i)!=null){
+    public int Endtime(int core) {
+        for (int i = deadline - 1; i >= 0; i--) {
+            if (this.getRunningTask(core, i) != null) {
                 return i;
             }
         }
         return 0;
     }
 
-    public int getSlack(int core){
-        return (deadline-Endtime(core));
+    public int getSlack(int core) {
+        return (deadline - Endtime(core));
     }
 
-    public int getSmallestSlack(){
-        int temp=deadline;
+    public int getSmallestSlack() {
+        int temp = deadline;
         for (int i = 0; i < n_Cores; i++) {
-            if(getSlack(i)<temp) temp=getSlack(i);
+            if (getSlack(i) < temp) temp = getSlack(i);
         }
         return temp;
     }
@@ -152,15 +152,117 @@ public class CPU {
     //Write Scheduling In File for Debugging
     public void debug(String Filename) throws IOException {
         BufferedWriter outputWriter = null;
-        outputWriter = new BufferedWriter(new FileWriter(Filename+".csv"));
+        outputWriter = new BufferedWriter(new FileWriter(Filename + ".csv"));
         for (int i = 0; i < getN_Cores(); i++) {
             for (int j = 0; j < getDeadline(); j++) {
-                outputWriter.write(core[i][j]+",");
-            };
+                outputWriter.write(core[i][j] + ",");
+            }
+            ;
             outputWriter.write("\n");
         }
         outputWriter.flush();
         outputWriter.close();
+    }
+
+    public void Task_Shifter(int shiftTime, int amount) throws Exception {
+        // System.out.println("TASK SHIFTER  "+ shiftTime+"  > > "+amount);
+        for (int i = 0; i < n_Cores; i++) {
+            for (int j = Endtime(i); j > (shiftTime); j--) {
+                try {
+                    this.SetTask(i, j + amount, this.getRunningTask(i, j));
+                    power[i][j + amount] = power[i][j];
+                } catch (Exception ex) {
+                    System.err.println(this.getRunningTask(i, j) + "  ⚠ ⚠ Infeasible!");
+                    throw new Exception("Infeasible!");
+                    // System.exit(1);
+                }
+            }
+            for (int j = shiftTime + 1; j < shiftTime + amount + 1; j++) {
+                this.SetTask(i, j, null);
+                power[i][j] = 0.5;
+            }
+        }
+    }
+
+    public void SetTask(int core_number, int time, String task) throws Exception {
+        try {
+            core[core_number][time] = task;
+
+        } catch (Exception e) {
+            //System.err.println(task+"  ⚠ ⚠ Infeasible!");
+            e.printStackTrace();
+            //System.out.println("Core  "+core_number+"  Time "+time);
+            throw new Exception("Infeasible!");
+            //System.exit(1);
+        }
+    }
+
+    //Return End Time of a Specific Replica of Tasks
+    public int getEndTimeTask(String Task) {
+        int e = -1;
+        //System.out.println(Task);
+        for (int i = 0; i < n_Cores; i++) {
+            if (Arrays.asList(core[i]).lastIndexOf(Task) != -1) {
+                if (Arrays.asList(core[i]).lastIndexOf(Task) > e) {
+                    e = Arrays.asList(core[i]).lastIndexOf(Task);
+                }
+            }
+        }
+        //   System.out.println("   >>> "+e);
+        return e;
+    }
+
+    public void Save_Power(String mFolder, String Folder, String Filename) throws IOException {
+        BufferedWriter outputWriter = null;
+        File newFolder2 = new File(mFolder);
+        newFolder2.mkdir();
+        File newFolder = new File(mFolder + "\\" + Folder);
+        newFolder.mkdir();
+        for (int i = 0; i < getN_Cores(); i++) {
+            outputWriter = new BufferedWriter(new FileWriter(mFolder + "\\" + Folder + "\\" + Filename + "_Core_" + i + ".txt"));
+            for (int j = 0; j < getDeadline(); j++) {
+                outputWriter.write(power[i][j] + "\n");
+            }
+            ;
+            outputWriter.flush();
+            outputWriter.close();
+
+        }
+    }
+
+    //Calculate Average Power Consumption of CPU in a Specific Interval
+    public double[] averagePowerInInterval(int start, int end) {
+        double [] p=new double[n_Cores];
+        for (int i = 0; i <n_Cores; i++) {
+            for (int j = start; j <= end; j++) {
+                p[i]+=power[i][j];
+            }
+            p[i]/=deadline;
+
+        }
+        return p;
+    }
+
+    //A Simple Function for Swap tasks in a specific interval
+    public void taskSwap(int core1,int core2,int start,int end){
+        double[] p=new double[start-end];
+        String[] s=new String[start-end];
+
+        int temp=0;
+        for (int i = start; i <=end ; i++) {
+            p[temp]=power[core1][i];
+            s[temp]=core[core1][i];
+            temp++;
+        }
+        temp=0;
+        for (int i = start; i <=end ; i++) {
+            power[core1][i]=power[core2][i];
+            core[core1][i]=core[core2][i];
+
+            power[core2][i]=p[temp];
+            core[core2][i]=s[temp];
+            temp++;
+        }
     }
 
     public void setN_Cores(int n_Cores) {
