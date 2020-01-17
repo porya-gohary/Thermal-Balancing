@@ -31,6 +31,9 @@ public class CPU {
     //Idle Power
     double idle_power = 3.0;
 
+    //Interval
+    int interval=0;
+
     private Set<task> t;
 
     //Location of Power Trace
@@ -255,7 +258,7 @@ public class CPU {
             for (int j = start; j <= end; j++) {
                 p[i] += power[i][j];
             }
-            p[i] /= deadline;
+            p[i] /= interval;
 
         }
         return p;
@@ -301,5 +304,11 @@ public class CPU {
         return deadline;
     }
 
+    public int getInterval() {
+        return interval;
+    }
 
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
 }
