@@ -21,9 +21,9 @@ import java.util.Set;
  *******************************************************************************/
 public class CPU {
     //Core of CPU   [#Core] [#Time]
-    private String[][] core;
+     String[][] core;
     //Power Trace of Cores
-    private double[][] power;
+    double[][] power;
     //Deadline of System
     private int deadline;
     //Number of Core in CPU

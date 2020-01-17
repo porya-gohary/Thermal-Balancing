@@ -1,7 +1,11 @@
 import jdk.internal.org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class main {
     public static void main(String args[]) throws Exception {
@@ -11,7 +15,7 @@ public class main {
         int tolerable_fault=2;
         int overhead=7;
         int number_of_tasks=30;
-        double utilization= 4.0;
+        double utilization=7.0;
         int iteration= 10;
 
 
@@ -57,7 +61,31 @@ public class main {
             continue;
         }
             cpu.Save_Power("U "+utilization,"R"+i,"Proposed_Method");
+            //PPA-EDF
+            PPA_EDF ppa_edf=new PPA_EDF(injected_fault,t,deadline,n_core);
+            ppa_edf.Schedule();
+            ppa_edf.cpu.Save_Power("U "+utilization,"R"+i,"PPA-EDF");
 
+            File newFolder1 = new File("U "+utilization+"\\R"+i+"\\Main");
+            newFolder1.mkdir();
+            File newFolder2 = new File("U "+utilization+"\\R"+i+"\\Proposed_Method");
+            newFolder2.mkdir();
+            File newFolder3 = new File("U "+utilization+"\\R"+i+"\\PPA-EDF");
+            newFolder3.mkdir();
+
+            for (int j = 0; j < n_core; j++) {
+                Path path = Files.move
+                        (Paths.get("U "+utilization+"\\R"+i+"\\Main_Core_"+j+".txt"),
+                                Paths.get("U "+utilization+"\\R"+i+"\\Main\\"+"core_"+j));
+                path = Files.move
+                        (Paths.get("U "+utilization+"\\R"+i+"\\Proposed_Method_Core_"+j+".txt"),
+                                Paths.get("U "+utilization+"\\R"+i+"\\Proposed_Method\\"+"core_"+j));
+                path = Files.move
+                        (Paths.get("U "+utilization+"\\R"+i+"\\PPA-EDF_Core_"+j+".txt"),
+                                Paths.get("U "+utilization+"\\R"+i+"\\PPA-EDF\\"+"core_"+j));
+
+
+            }
 
         }
 
